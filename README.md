@@ -1,59 +1,74 @@
-# Vue Intersect Directive
+# Vue 3 Intersect Directive
 
-<a href="https://vuejs.org/"><img src="https://img.shields.io/badge/vue-2.6-brightgreen"/></a>
+<a href="https://vuejs.org/"><img src="https://img.shields.io/badge/vue-3.4-brightgreen"/></a>
 
-VueJS directive to observe intersection of an element with viewport.
+Vue.js directive to observe intersection of an element with viewport.
+
+> [!NOTE]
+> This is a fork of megurock's [vue-intersect-directive](https://github.com/megurock/vue-intersect-directive), rewritten for Vue 3 with some extra features.
 
 # Installation
-
-:warning: This plugin uses the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) that is [not supported](https://caniuse.com/#feat=intersectionobserver) in some legacy browsers. Please include a [polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill) to work them around.
-
 
 Via npm:
 
 ```bash
-npm install vue-intersect-directive
+npm install vue3-intersect-directive
 ```
 
 Via yarn:
 
 ```bash
-yarn add vue-intersect-directive
+yarn add vue3-intersect-directive
 ```
 
 ## Import
 
 ```js
 import Vue from 'vue'
-import VueIntersect from 'vue-intersect-directive'
+import VueIntersect from 'vue3-intersect-directive'
 
-Vue.use(VueIntersect)
+// optional, see Usage for available options
+const options = { ... }
+
+Vue.use(VueIntersect, options)
 ```
 
 Or: 
 
 ```js
 import Vue from 'vue'
-import { IntersectDirective }  from 'vue-intersect-directive'
+import { createIntersectDirective }  from 'vue3-intersect-directive'
 
-Vue.directive('intersect', IntersectDirective)
+// optional, see Usage for available options
+const options = { ... }
+
+Vue.directive('intersect', createIntersectDirective(options))
 ```
 
 ## Browser
 
 ```html
 <script src="vue.js"></script>
-<script src="vue-intersect-directive/dist/vue-intersect-directive.min.js"></script>
+<script src="vue3-intersect-directive/dist/vue-intersect-directive.min.js"></script>
 ```
 
 # Usage
+
+Options passed to the directive on element take precedence over the global options set when registering the plugin/directive.
 
 ## CSS Binding 
 
 Attach `foo` class to an element only when it is inside the viewport.
 
 ```html
-<div v-intersect="{ true: ['foo'] }">Hello</div>
+<div v-intersect="{ true: 'foo' }">Hello</div>
+```
+or with global options:
+```js
+Vue.use(VueIntersect, { true: 'foo' })
+```
+```html
+<div v-intersect>Hello</div>
 ```
 
 Attach `bar` and `baz` classes to an elment only when it is outside the viewport.
