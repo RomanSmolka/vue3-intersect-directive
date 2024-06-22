@@ -1,5 +1,6 @@
-import IntersectDirective from './intersect-directive'
+import createIntersectDirective, { IntersectDirective } from './intersect-directive'
 import { ObjectPlugin, App } from '@vue/runtime-core'
+import { IntersectOptions } from './Intersect'
 
 declare global {
   interface Window {
@@ -8,8 +9,8 @@ declare global {
 }
 
 const VueIntersect: ObjectPlugin = {
-  install: (app: App) => {
-    app.directive('intersect', IntersectDirective)
+  install: (app: App, options: IntersectOptions) => {
+    app.directive('intersect', createIntersectDirective(options))
   }
 }
 
@@ -17,5 +18,5 @@ if (typeof window !== 'undefined' && window.Vue) {
   window.Vue.use(VueIntersect.install)
 }
 
-export { IntersectDirective }
+export { createIntersectDirective, IntersectDirective }
 export default VueIntersect

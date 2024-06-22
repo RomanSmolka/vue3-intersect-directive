@@ -1,5 +1,9 @@
 import { ObjectDirective, DirectiveHook, DirectiveBinding, VNode } from '@vue/runtime-core'
-import Intersect from './Intersect'
+import Intersect, { IntersectOptions } from './Intersect'
+
+export interface ObjectDirectiveWithOptions extends ObjectDirective {
+  globalOptions?: IntersectOptions
+}
 
 const intersectMap: Map<HTMLElement, Intersect> = new Map<HTMLElement, Intersect>()
 
@@ -31,4 +35,10 @@ const IntersectDirective: ObjectDirective = {
   getSSRProps: () => ({}) // for nuxt
 }
 
-export default IntersectDirective
+const createIntersectDirective = (options: IntersectOptions): ObjectDirectiveWithOptions => ({
+  ...IntersectDirective,
+  globalOptions: options
+})
+
+export { IntersectDirective }
+export default createIntersectDirective

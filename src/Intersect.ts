@@ -1,9 +1,10 @@
 import { DirectiveBinding } from '@vue/runtime-core'
 import { nextTick } from 'vue'
+import { ObjectDirectiveWithOptions } from './intersect-directive'
 
-type StyleOptions = string[] | { [prop: string]: any }
+type StyleOptions = string | string[] | { [prop: string]: any }
 
-interface IntersectOptions {
+export interface IntersectOptions {
   observerOptions?: IntersectionObserverInit
   true?: StyleOptions
   false?: StyleOptions
@@ -28,17 +29,21 @@ export default class Intersect {
   public async bind(el: HTMLElement, binding: DirectiveBinding) {
     await nextTick()
     //
-    const observerOptions: IntersectionObserverInit = { ...binding.value.observerOptions }
+    const globalOptions: IntersectOptions = (binding.dir as ObjectDirectiveWithOptions).globalOptions || {}
+    const observerOptions: IntersectionObserverInit = { ...binding.value?.observerOptions }
+
     this.interSectionObserver = new IntersectionObserver(this.onIntersectChange.bind(this), observerOptions)
     this.interSectionObserver.observe(el)
     //
     this.el = el
+
+
     this.options = {
-      true: binding.value.true,
-      false: binding.value.false,
-      disposeWhen: binding.value.disposeWhen,
+      true: binding.value?.true || globalOptions?.true,
+      false: binding.value?.false || globalOptions?.false,
+      disposeWhen: binding.value?.disposeWhen || globalOptions?.disposeWhen,
     }
-    this.callback = binding.value.onChange
+    this.callback = binding.value?.onChange || globalOptions?.onChange
   }
 
   /**
@@ -81,8 +86,13 @@ export default class Intersect {
   protected addStyleOptions(options: StyleOptions): void {
     if (Array.isArray(options)) {
       this.el.classList.add(...options)
-    } else {
+    }
+    else if (typeof options === 'string') {
+      this.el.classList.add(options)
+    }
+    else {
       for (const prop of Object.keys(options)) {
+        console.log(prop, options);
         this.el.style[prop as any] = options[prop]
       }
     }
@@ -94,7 +104,11 @@ export default class Intersect {
   protected removeStyleOptions(options: StyleOptions): void {
     if (Array.isArray(options)) {
       this.el.classList.remove(...options)
-    } else {
+    }
+    else if (typeof options === 'string') {
+      this.el.classList.remove(options)
+    }
+    else {
       for (const prop of Object.keys(options)) {
         this.el.style.removeProperty(prop)
       }
