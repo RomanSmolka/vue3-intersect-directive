@@ -90,7 +90,7 @@ var Intersect = /** @class */ (function () {
                     case 1:
                         _f.sent();
                         globalOptions = binding.dir.globalOptions || {};
-                        observerOptions = __assign({}, (_a = binding.value) === null || _a === void 0 ? void 0 : _a.observerOptions);
+                        observerOptions = __assign({}, ((_a = binding.value) === null || _a === void 0 ? void 0 : _a.observerOptions) || (globalOptions === null || globalOptions === void 0 ? void 0 : globalOptions.observerOptions));
                         this.interSectionObserver = new IntersectionObserver(this.onIntersectChange.bind(this), observerOptions);
                         this.interSectionObserver.observe(el);
                         //
