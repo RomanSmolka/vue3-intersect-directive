@@ -30,7 +30,7 @@ export default class Intersect {
     await nextTick()
     //
     const globalOptions: IntersectOptions = (binding.dir as ObjectDirectiveWithOptions).globalOptions || {}
-    const observerOptions: IntersectionObserverInit = { ...binding.value?.observerOptions }
+    const observerOptions: IntersectionObserverInit = { ...binding.value?.observerOptions || globalOptions?.observerOptions }
 
     this.interSectionObserver = new IntersectionObserver(this.onIntersectChange.bind(this), observerOptions)
     this.interSectionObserver.observe(el)
