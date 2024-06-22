@@ -56,9 +56,9 @@ Vue.directive('intersect', createIntersectDirective(options))
 
 Options passed to the directive on element take precedence over the global options set when registering the plugin/directive.
 
-## CSS Binding 
+## CSS & Attribute Binding 
 
-Attach `foo` class to an element only when it is inside the viewport.
+Attach `foo` class to an element only when it is inside the viewport:
 
 ```html
 <div v-intersect="{ true: 'foo' }">Hello</div>
@@ -71,16 +71,22 @@ Vue.use(VueIntersect, { true: 'foo' })
 <div v-intersect>Hello</div>
 ```
 
-Attach `bar` and `baz` classes to an elment only when it is outside the viewport.
+Attach `bar` and `baz` classes to an elment only when it is outside the viewport:
 
 ```html
 <div v-intersect="{ false: ['bar', 'baz'] }">Hello</div>
 ```
 
-CSS can be specified as object format.
+Inline styles can be specified with object:
 
 ```html
 <div v-intersect="{ true: { backgroundColor: 'green' } }">Hello</div>
+```
+
+Or you can trigger a custom attribute by using `attr` instead:
+
+```html
+<div v-intersect="{ true: { attr: 'data-foo' } }">Hello</div>
 ```
 
 ## Intersection Callback

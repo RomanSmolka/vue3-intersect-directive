@@ -84,16 +84,24 @@ export default class Intersect {
    *
    */
   protected addStyleOptions(options: StyleOptions): void {
+    // Classes array
     if (Array.isArray(options)) {
       this.el.classList.add(...options)
     }
+    // Single class
     else if (typeof options === 'string') {
       this.el.classList.add(options)
     }
     else {
       for (const prop of Object.keys(options)) {
-        console.log(prop, options);
-        this.el.style[prop as any] = options[prop]
+        // Custom attribute
+        if (prop === 'attr') {
+          this.el.setAttribute(options[prop], '')
+        }
+        // Inline style
+        else {
+          this.el.style[prop as any] = options[prop]
+        }
       }
     }
   }
@@ -102,15 +110,24 @@ export default class Intersect {
    *
    */
   protected removeStyleOptions(options: StyleOptions): void {
+    // Classes array
     if (Array.isArray(options)) {
       this.el.classList.remove(...options)
     }
+    // Single class
     else if (typeof options === 'string') {
       this.el.classList.remove(options)
     }
     else {
       for (const prop of Object.keys(options)) {
-        this.el.style.removeProperty(prop)
+        // Custom attribute
+        if (prop === 'attr') {
+          this.el.removeAttribute(options[prop])
+        }
+        // Inline style
+        else {
+          this.el.style.removeProperty(prop)
+        }
       }
     }
   }
