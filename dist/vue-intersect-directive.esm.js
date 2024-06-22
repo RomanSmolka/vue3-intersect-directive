@@ -80,25 +80,27 @@ var Intersect = /** @class */ (function () {
      */
     Intersect.prototype.bind = function (el, binding) {
         return __awaiter(this, void 0, void 0, function () {
-            var observerOptions;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var globalOptions, observerOptions;
+            var _a, _b, _c, _d, _e;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
                     case 0: return [4 /*yield*/, nextTick()
                         //
                     ];
                     case 1:
-                        _a.sent();
-                        observerOptions = __assign({}, binding.value.observerOptions);
+                        _f.sent();
+                        globalOptions = binding.dir.globalOptions || {};
+                        observerOptions = __assign({}, (_a = binding.value) === null || _a === void 0 ? void 0 : _a.observerOptions);
                         this.interSectionObserver = new IntersectionObserver(this.onIntersectChange.bind(this), observerOptions);
                         this.interSectionObserver.observe(el);
                         //
                         this.el = el;
                         this.options = {
-                            true: binding.value.true,
-                            false: binding.value.false,
-                            disposeWhen: binding.value.disposeWhen,
+                            true: ((_b = binding.value) === null || _b === void 0 ? void 0 : _b.true) || (globalOptions === null || globalOptions === void 0 ? void 0 : globalOptions.true),
+                            false: ((_c = binding.value) === null || _c === void 0 ? void 0 : _c.false) || (globalOptions === null || globalOptions === void 0 ? void 0 : globalOptions.false),
+                            disposeWhen: ((_d = binding.value) === null || _d === void 0 ? void 0 : _d.disposeWhen) || (globalOptions === null || globalOptions === void 0 ? void 0 : globalOptions.disposeWhen),
                         };
-                        this.callback = binding.value.onChange;
+                        this.callback = ((_e = binding.value) === null || _e === void 0 ? void 0 : _e.onChange) || (globalOptions === null || globalOptions === void 0 ? void 0 : globalOptions.onChange);
                         return [2 /*return*/];
                 }
             });
@@ -151,9 +153,13 @@ var Intersect = /** @class */ (function () {
         if (Array.isArray(options)) {
             (_a = this.el.classList).add.apply(_a, options);
         }
+        else if (typeof options === 'string') {
+            this.el.classList.add(options);
+        }
         else {
             for (var _i = 0, _b = Object.keys(options); _i < _b.length; _i++) {
                 var prop = _b[_i];
+                console.log(prop, options);
                 this.el.style[prop] = options[prop];
             }
         }
@@ -165,6 +171,9 @@ var Intersect = /** @class */ (function () {
         var _a;
         if (Array.isArray(options)) {
             (_a = this.el.classList).remove.apply(_a, options);
+        }
+        else if (typeof options === 'string') {
+            this.el.classList.remove(options);
         }
         else {
             for (var _i = 0, _b = Object.keys(options); _i < _b.length; _i++) {
@@ -180,7 +189,7 @@ var intersectMap = new Map();
 /**
  *
  */
-var mounted = function (el, binding) {
+var beforeMount = function (el, binding) {
     var intersect = new Intersect();
     intersectMap.set(el, intersect);
     intersect.bind(el, binding);
@@ -198,19 +207,19 @@ var unmounted = function (el, binding) {
  *
  */
 var IntersectDirective = {
-    mounted: mounted,
+    beforeMount: beforeMount,
     unmounted: unmounted,
-    getSSRProps: function () { return ({}); } // no SSR support
+    getSSRProps: function () { return ({}); } // for nuxt
 };
+var createIntersectDirective = function (options) { return (__assign(__assign({}, IntersectDirective), { globalOptions: options })); };
 
-var install = function (app) {
-    app.directive('intersect', IntersectDirective);
-};
 var VueIntersect = {
-    install: install,
+    install: function (app, options) {
+        app.directive('intersect', createIntersectDirective(options));
+    }
 };
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.use(VueIntersect.install);
 }
 
-export { IntersectDirective, VueIntersect as default };
+export { IntersectDirective, createIntersectDirective, VueIntersect as default };

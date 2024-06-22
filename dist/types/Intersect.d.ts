@@ -1,8 +1,8 @@
 import { DirectiveBinding } from '@vue/runtime-core';
-type StyleOptions = string[] | {
+type StyleOptions = string | string[] | {
     [prop: string]: any;
 };
-interface IntersectOptions {
+export interface IntersectOptions {
     observerOptions?: IntersectionObserverInit;
     true?: StyleOptions;
     false?: StyleOptions;
