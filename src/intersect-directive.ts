@@ -1,5 +1,4 @@
-import { DirectiveOptions, DirectiveFunction, VNode } from 'vue'
-import { DirectiveBinding } from 'vue/types/options'
+import { ObjectDirective, DirectiveHook, DirectiveBinding, VNode } from '@vue/runtime-core'
 import Intersect from './Intersect'
 
 const intersectMap: Map<HTMLElement, Intersect> = new Map<HTMLElement, Intersect>()
@@ -7,8 +6,8 @@ const intersectMap: Map<HTMLElement, Intersect> = new Map<HTMLElement, Intersect
 /**
  *
  */
-const bind: DirectiveFunction = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode, oldVnode: VNode) => {
-  const intersect: Intersect = new Intersect(vnode.context!)
+const beforeMount: DirectiveHook = (el: HTMLElement, binding: DirectiveBinding) => {
+  const intersect: Intersect = new Intersect()
   intersectMap.set(el, intersect)
   intersect.bind(el, binding)
 }
@@ -16,7 +15,7 @@ const bind: DirectiveFunction = (el: HTMLElement, binding: DirectiveBinding, vno
 /**
  *
  */
-const unbind: DirectiveFunction = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode, oldVnode: VNode) => {
+const unmounted: DirectiveHook = (el: HTMLElement, binding: DirectiveBinding) => {
   const intersect: Intersect | undefined = intersectMap.get(el)
   if (intersect) {
     intersect.unbind(el, binding)
@@ -26,9 +25,10 @@ const unbind: DirectiveFunction = (el: HTMLElement, binding: DirectiveBinding, v
 /**
  *
  */
-const IntersectDirective: DirectiveOptions = {
-  bind,
-  unbind,
+const IntersectDirective: ObjectDirective = {
+  beforeMount,
+  unmounted,
+  getSSRProps: () => ({}) // for nuxt
 }
 
 export default IntersectDirective

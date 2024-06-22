@@ -1,6 +1,5 @@
-import { DirectiveBinding } from 'vue/types/options';
-import Vue from 'vue';
-declare type StyleOptions = string[] | {
+import { DirectiveBinding } from '@vue/runtime-core';
+type StyleOptions = string[] | {
     [prop: string]: any;
 };
 interface IntersectOptions {
@@ -10,17 +9,12 @@ interface IntersectOptions {
     onChange?: IntersectChangeHandler;
     disposeWhen?: boolean;
 }
-declare type IntersectChangeHandler = (isInterSecting: boolean, el: HTMLElement, options: IntersectOptions) => any;
+type IntersectChangeHandler = (isInterSecting: boolean, el: HTMLElement, options: IntersectOptions) => any;
 export default class Intersect {
-    protected vm: Vue;
     protected interSectionObserver: IntersectionObserver;
     protected el: HTMLElement;
     protected options: IntersectOptions;
     protected callback: IntersectChangeHandler;
-    /**
-     *
-     */
-    constructor(vm: Vue);
     /**
      *
      */

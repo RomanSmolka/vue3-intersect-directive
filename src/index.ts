@@ -1,22 +1,20 @@
 import IntersectDirective from './intersect-directive'
-import Vue, { PluginObject, PluginFunction } from 'vue'
+import { ObjectPlugin, App } from '@vue/runtime-core'
 
 declare global {
   interface Window {
-    Vue: Vue | undefined
+    Vue: App | undefined
   }
 }
 
-const install: PluginFunction<never> = () => {
-  Vue.directive('intersect', IntersectDirective)
-}
-
-const VueIntersect: PluginObject<never> = {
-  install,
+const VueIntersect: ObjectPlugin = {
+  install: (app: App) => {
+    app.directive('intersect', IntersectDirective)
+  }
 }
 
 if (typeof window !== 'undefined' && window.Vue) {
-  Vue.use(VueIntersect.install)
+  window.Vue.use(VueIntersect.install)
 }
 
 export { IntersectDirective }

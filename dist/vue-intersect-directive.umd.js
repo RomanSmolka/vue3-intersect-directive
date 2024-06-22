@@ -1,24 +1,22 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue')) :
     typeof define === 'function' && define.amd ? define(['exports', 'vue'], factory) :
-    (global = global || self, factory(global['vue-intersect-directive'] = {}, global.Vue));
-}(this, (function (exports, Vue) { 'use strict';
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["vue-intersect-directive"] = {}, global.Vue));
+})(this, (function (exports, vue) { 'use strict';
 
-    Vue = Vue && Object.prototype.hasOwnProperty.call(Vue, 'default') ? Vue['default'] : Vue;
+    /******************************************************************************
+    Copyright (c) Microsoft Corporation.
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
 
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
-
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
     var __assign = function() {
@@ -33,10 +31,11 @@
     };
 
     function __awaiter(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
         return new (P || (P = Promise))(function (resolve, reject) {
             function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
             function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     }
@@ -47,7 +46,7 @@
         function verb(n) { return function (v) { return step([n, v]); }; }
         function step(op) {
             if (f) throw new TypeError("Generator is already executing.");
-            while (_) try {
+            while (g && (g = 0, op[0] && (_ = 0)), _) try {
                 if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
                 if (y = 0, t) op = [op[0] & 2, t.value];
                 switch (op[0]) {
@@ -69,15 +68,16 @@
         }
     }
 
+    typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+        var e = new Error(message);
+        return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+    };
+
     // --------------------------------------------------------------------------
     // Intersect
     // --------------------------------------------------------------------------
     var Intersect = /** @class */ (function () {
-        /**
-         *
-         */
-        function Intersect(vm) {
-            this.vm = vm;
+        function Intersect() {
         }
         /**
          *
@@ -87,7 +87,7 @@
                 var observerOptions;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.vm.$nextTick()
+                        case 0: return [4 /*yield*/, vue.nextTick()
                             //
                         ];
                         case 1:
@@ -184,15 +184,15 @@
     /**
      *
      */
-    var bind = function (el, binding, vnode, oldVnode) {
-        var intersect = new Intersect(vnode.context);
+    var mounted = function (el, binding) {
+        var intersect = new Intersect();
         intersectMap.set(el, intersect);
         intersect.bind(el, binding);
     };
     /**
      *
      */
-    var unbind = function (el, binding, vnode, oldVnode) {
+    var unmounted = function (el, binding) {
         var intersect = intersectMap.get(el);
         if (intersect) {
             intersect.unbind(el, binding);
@@ -202,23 +202,24 @@
      *
      */
     var IntersectDirective = {
-        bind: bind,
-        unbind: unbind,
+        mounted: mounted,
+        unmounted: unmounted,
+        getSSRProps: function () { return ({}); } // no SSR support
     };
 
-    var install = function () {
-        Vue.directive('intersect', IntersectDirective);
+    var install = function (app) {
+        app.directive('intersect', IntersectDirective);
     };
     var VueIntersect = {
         install: install,
     };
-    if (window.Vue) {
-        Vue.use(VueIntersect.install);
+    if (typeof window !== 'undefined' && window.Vue) {
+        window.Vue.use(VueIntersect.install);
     }
 
     exports.IntersectDirective = IntersectDirective;
-    exports.default = VueIntersect;
+    exports["default"] = VueIntersect;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));

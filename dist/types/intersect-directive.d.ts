@@ -1,6 +1,6 @@
-import { DirectiveOptions } from 'vue';
+import { ObjectDirective } from '@vue/runtime-core';
 /**
  *
  */
-declare const IntersectDirective: DirectiveOptions;
+declare const IntersectDirective: ObjectDirective;
 export default IntersectDirective;

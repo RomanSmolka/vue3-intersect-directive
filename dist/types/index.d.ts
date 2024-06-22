@@ -1,10 +1,10 @@
 import IntersectDirective from './intersect-directive';
-import Vue, { PluginObject } from 'vue';
+import { ObjectPlugin, App } from '@vue/runtime-core';
 declare global {
     interface Window {
-        Vue: Vue | undefined;
+        Vue: App | undefined;
     }
 }
-declare const VueIntersect: PluginObject<never>;
+declare const VueIntersect: ObjectPlugin;
 export { IntersectDirective };
 export default VueIntersect;

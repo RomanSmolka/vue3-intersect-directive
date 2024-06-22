@@ -1,5 +1,5 @@
-import { DirectiveBinding } from 'vue/types/options'
-import Vue from 'vue'
+import { DirectiveBinding } from '@vue/runtime-core'
+import { nextTick } from 'vue'
 
 type StyleOptions = string[] | { [prop: string]: any }
 
@@ -25,13 +25,8 @@ export default class Intersect {
   /**
    *
    */
-  public constructor(protected vm: Vue) {}
-
-  /**
-   *
-   */
   public async bind(el: HTMLElement, binding: DirectiveBinding) {
-    await this.vm.$nextTick()
+    await nextTick()
     //
     const observerOptions: IntersectionObserverInit = { ...binding.value.observerOptions }
     this.interSectionObserver = new IntersectionObserver(this.onIntersectChange.bind(this), observerOptions)
