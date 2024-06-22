@@ -150,17 +150,25 @@ var Intersect = /** @class */ (function () {
      */
     Intersect.prototype.addStyleOptions = function (options) {
         var _a;
+        // Classes array
         if (Array.isArray(options)) {
             (_a = this.el.classList).add.apply(_a, options);
         }
+        // Single class
         else if (typeof options === 'string') {
             this.el.classList.add(options);
         }
         else {
             for (var _i = 0, _b = Object.keys(options); _i < _b.length; _i++) {
                 var prop = _b[_i];
-                console.log(prop, options);
-                this.el.style[prop] = options[prop];
+                // Custom attribute
+                if (prop === 'attr') {
+                    this.el.setAttribute(options[prop], '');
+                }
+                // Inline style
+                else {
+                    this.el.style[prop] = options[prop];
+                }
             }
         }
     };
@@ -169,16 +177,25 @@ var Intersect = /** @class */ (function () {
      */
     Intersect.prototype.removeStyleOptions = function (options) {
         var _a;
+        // Classes array
         if (Array.isArray(options)) {
             (_a = this.el.classList).remove.apply(_a, options);
         }
+        // Single class
         else if (typeof options === 'string') {
             this.el.classList.remove(options);
         }
         else {
             for (var _i = 0, _b = Object.keys(options); _i < _b.length; _i++) {
                 var prop = _b[_i];
-                this.el.style.removeProperty(prop);
+                // Custom attribute
+                if (prop === 'attr') {
+                    this.el.removeAttribute(options[prop]);
+                }
+                // Inline style
+                else {
+                    this.el.style.removeProperty(prop);
+                }
             }
         }
     };
